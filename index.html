@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Muzlatgichdagi retseptlar</title>
+    <style>
+      :root {
+        --bg: #eef4f6;
+        --surface: #fff;
+        --ink: #12303a;
+        --muted: #5a7480;
+        --line: #cfdde3;
+        --accent: #1f7a5c;
+        --accent-ink: #fff;
+        --warn: #c4452d;
+        --chip: #e1ecf0;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1d22;
+          --surface: #172a31;
+          --ink: #e6f0f3;
+          --muted: #93aab3;
+          --line: #2a4550;
+          --accent: #4fc79a;
+          --accent-ink: #06231a;
+          --warn: #ff8a73;
+          --chip: #203840;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0f1d22;
+        --surface: #172a31;
+        --ink: #e6f0f3;
+        --muted: #93aab3;
+        --line: #2a4550;
+        --accent: #4fc79a;
+        --accent-ink: #06231a;
+        --warn: #ff8a73;
+        --chip: #203840;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          16px/1.55 "Trebuchet MS",
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            ellipse at 15% 0%,
+            rgba(79, 199, 154, 0.22),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 100% 100%,
+            rgba(196, 69, 45, 0.12),
+            transparent 50%
+          ),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg font-size='34' opacity='.2'%3E%3Ctext x='14' y='50' transform='rotate(-12 30 40)'%3E🍅%3C/text%3E%3Ctext x='140' y='40' transform='rotate(10 150 30)'%3E🥚%3C/text%3E%3Ctext x='80' y='130'%3E🧀%3C/text%3E%3Ctext x='185' y='165' transform='rotate(-8 195 155)'%3E🥕%3C/text%3E%3Ctext x='18' y='205' transform='rotate(8 30 195)'%3E🥬%3C/text%3E%3Ctext x='130' y='222'%3E🍳%3C/text%3E%3C/g%3E%3C/svg%3E");
+        background-size:
+          auto,
+          auto,
+          240px 240px;
+      }
+      main {
+        position: relative;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+      }
+      h1 {
+        font:
+          700 clamp(1.8rem, 5vw, 2.6rem)/1.1 Georgia,
+          "Times New Roman",
+          serif;
+        margin: 0 0 8px;
+        letter-spacing: -0.01em;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0 0 24px;
+        max-width: 56ch;
+      }
+      .fridge {
+        background: var(--surface);
+        border: 2px solid var(--line);
+        border-radius: 22px;
+        padding: 18px;
+      }
+      .fridge h2,
+      .res h2 {
+        font-size: 1rem;
+        margin: 0 0 10px;
+      }
+      .group {
+        margin-bottom: 14px;
+      }
+      .group p {
+        margin: 0 0 6px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        border: 1.5px solid var(--line);
+        background: var(--chip);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 8px 14px;
+        font: inherit;
+        cursor: pointer;
+        min-height: 40px;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+        font-weight: 700;
+      }
+      .chip:focus-visible,
+      .card summary:focus-visible,
+      .clear:focus-visible {
+        outline: 3px solid var(--ink);
+        outline-offset: 2px;
+      }
+      .bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .clear {
+        background: none;
+        border: 0;
+        color: var(--ink);
+        text-decoration: underline;
+        font: inherit;
+        cursor: pointer;
+        padding: 6px;
+      }
+      .note {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 12px 0 0;
+      }
+      .res {
+        margin-top: 28px;
+      }
+      .res h2 {
+        font-size: 1.15rem;
+        margin: 22px 0 10px;
+      }
+      .empty {
+        background: var(--surface);
+        border: 2px dashed var(--line);
+        border-radius: 16px;
+        padding: 22px;
+        color: var(--muted);
+      }
+      .card {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 14px;
+        margin-bottom: 10px;
+        overflow: hidden;
+      }
+      .card summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+      .card summary::-webkit-details-marker {
+        display: none;
+      }
+      .card b {
+        font-size: 1.05rem;
+      }
+      .tag {
+        font-size: 0.82rem;
+        white-space: nowrap;
+        border-radius: 999px;
+        padding: 3px 10px;
+        background: var(--chip);
+      }
+      .tag.ok {
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-weight: 700;
+      }
+      .body {
+        padding: 0 16px 16px;
+        border-top: 1px solid var(--line);
+      }
+      .body p {
+        margin: 12px 0 4px;
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .have {
+        color: var(--accent);
+      }
+      .miss {
+        color: var(--warn);
+      }
+      .body ol {
+        margin: 4px 0 0;
+        padding-left: 20px;
+      }
+      .time {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Muzlatgichda nima bor?</h1>
+      <p class="lead">
+        Uyingizdagi mahsulotlarni belgilang. Ulardan qanday taom tayyorlash
+        mumkinligini darrov ko‘rasiz.
+      </p>
+
+      <section class="fridge" aria-label="Mahsulotlar">
+        <h2>Mahsulotlaringizni tanlang</h2>
+        <div id="groups"></div>
+        <div class="bar">
+          <span id="count">Hech narsa tanlanmagan</span
+          ><button class="clear" id="clear" type="button">Tozalash</button>
+        </div>
+        <p class="note">
+          Tuz, o‘simlik yog‘i, suv va ziravorlar har doim bor deb hisoblanadi.
+        </p>
+      </section>
+
+      <section class="res" aria-live="polite" id="res"></section>
+    </main>
+
+    <script>
+      var GROUPS = {
+        "Sut va tuxum": ["Tuxum", "Pishloq", "Sut", "Qatiq", "Sariyog‘"],
+        Sabzavotlar: [
+          "Pomidor",
+          "Bodring",
+          "Piyoz",
+          "Kartoshka",
+          "Sabzi",
+          "Sarimsoq",
+        ],
+        "Go‘sht": ["Tovuq", "Go‘sht"],
+        "Non va don": ["Non", "Un", "Guruch", "Makaron"],
+      };
+      var R = [
+        {
+          n: "Pomidorli tuxum",
+          t: "15 daqiqa",
+          i: ["Tuxum", "Pomidor", "Piyoz"],
+          s: [
+            "Piyozni to‘g‘rab, yog‘da yumshaguncha qovuring.",
+            "Maydalangan pomidorni qo‘shib, 5 daqiqa damlang.",
+            "Tuxumni yorib soling, tuz seping va qopqoq ostida pishiring.",
+          ],
+        },
+        {
+          n: "Pishloqli omlet",
+          t: "10 daqiqa",
+          i: ["Tuxum", "Pishloq"],
+          s: [
+            "Tuxumni tuz bilan chayqating.",
+            "Qizigan tovaga quying.",
+            "Ustiga qirg‘ich pishloq sepib, ikkiga buklang.",
+          ],
+        },
+        {
+          n: "Pishloqli tost",
+          t: "8 daqiqa",
+          i: ["Non", "Pishloq", "Sariyog‘"],
+          s: [
+            "Nonga sariyog‘ surting.",
+            "Pishloq bo‘lagini qo‘ying.",
+            "Tovada ikki tomonini tilla rangga kirguncha qovuring.",
+          ],
+        },
+        {
+          n: "Tuxumli sendvich",
+          t: "10 daqiqa",
+          i: ["Non", "Tuxum", "Pomidor"],
+          s: [
+            "Tuxumni 9 daqiqa qaynatib, tozalang.",
+            "Tuxum va pomidorni yupqa to‘g‘rang.",
+            "Nonga terib, tuz seping.",
+          ],
+        },
+        {
+          n: "Qovurilgan kartoshka",
+          t: "25 daqiqa",
+          i: ["Kartoshka", "Piyoz"],
+          s: [
+            "Kartoshkani brusok qilib to‘g‘rang.",
+            "Qizigan yog‘da qopqoqsiz qovuring.",
+            "Oxirida piyoz qo‘shib, tuz seping.",
+          ],
+        },
+        {
+          n: "Kartoshkali frittata",
+          t: "25 daqiqa",
+          i: ["Kartoshka", "Tuxum", "Piyoz"],
+          s: [
+            "Kartoshka va piyozni yupqa qovuring.",
+            "Ustiga chayqatilgan tuxumni quying.",
+            "Qopqoq ostida past olovda quyuqlashguncha pishiring.",
+          ],
+        },
+        {
+          n: "Pomidor-bodring salati",
+          t: "7 daqiqa",
+          i: ["Pomidor", "Bodring", "Piyoz"],
+          s: [
+            "Sabzavotlarni to‘g‘rang.",
+            "Yupqa halqa piyoz qo‘shing.",
+            "Tuz va o‘simlik yog‘i bilan aralashtiring.",
+          ],
+        },
+        {
+          n: "Qatiqli bodring (chalop)",
+          t: "5 daqiqa",
+          i: ["Bodring", "Qatiq", "Sarimsoq"],
+          s: [
+            "Bodringni mayda to‘g‘rang.",
+            "Qatiqqa ezilgan sarimsoq va tuz soling.",
+            "Bodringni aralashtirib, sovuq holda iching.",
+          ],
+        },
+        {
+          n: "Pishloqli makaron",
+          t: "15 daqiqa",
+          i: ["Makaron", "Pishloq", "Sariyog‘"],
+          s: [
+            "Makaronni tuzli suvda qaynatib suzing.",
+            "Sariyog‘da aralashtiring.",
+            "Qirg‘ich pishloq sepib, darrov torting.",
+          ],
+        },
+        {
+          n: "Pomidor sousli makaron",
+          t: "20 daqiqa",
+          i: ["Makaron", "Pomidor", "Sarimsoq"],
+          s: [
+            "Sarimsoqni yog‘da bir daqiqa qovuring.",
+            "Maydalangan pomidorni 10 daqiqa dimlang.",
+            "Qaynatilgan makaron bilan aralashtiring.",
+          ],
+        },
+        {
+          n: "Tovuq qovurma",
+          t: "30 daqiqa",
+          i: ["Tovuq", "Sarimsoq", "Piyoz"],
+          s: [
+            "Tovuqni bo‘laklab tuz va sarimsoq bilan ishqalang.",
+            "Piyoz bilan qizigan yog‘da qovuring.",
+            "Qopqoq ostida 15 daqiqa pishiring.",
+          ],
+        },
+        {
+          n: "Tovuqli sho‘rva",
+          t: "50 daqiqa",
+          i: ["Tovuq", "Kartoshka", "Sabzi", "Piyoz"],
+          s: [
+            "Tovuqni suvda 25 daqiqa qaynating, ko‘pigini oling.",
+            "Sabzavotlarni yirik to‘g‘rab soling.",
+            "Yana 20 daqiqa pishirib, tuz soling.",
+          ],
+        },
+        {
+          n: "Palov",
+          t: "1 soat 30 daqiqa",
+          i: ["Guruch", "Sabzi", "Piyoz", "Go‘sht"],
+          s: [
+            "Go‘sht va piyozni qozonda qizil tusga kirguncha qovuring.",
+            "Sabzini somoncha to‘g‘rab, qo‘shing va suv quyib zirvak qiling.",
+            "Yuvilgan guruchni soling, suvi tortilgach damlang.",
+          ],
+        },
+        {
+          n: "Mastava",
+          t: "1 soat",
+          i: ["Go‘sht", "Guruch", "Kartoshka", "Sabzi", "Piyoz", "Pomidor"],
+          s: [
+            "Go‘sht va piyozni yog‘da qovuring.",
+            "Sabzavotlarni qo‘shib, suv quying.",
+            "Guruch soling va 25 daqiqa qaynating.",
+          ],
+        },
+        {
+          n: "Dimlama",
+          t: "1 soat 15 daqiqa",
+          i: ["Go‘sht", "Kartoshka", "Sabzi", "Piyoz", "Pomidor"],
+          s: [
+            "Qozonga go‘sht va piyozni soling.",
+            "Qatlam-qatlam sabzavotlarni joylang.",
+            "Past olovda qopqoq ostida 50 daqiqa dimlang, aralashtirmang.",
+          ],
+        },
+        {
+          n: "Krep (yupqa blin)",
+          t: "20 daqiqa",
+          i: ["Tuxum", "Sut", "Un"],
+          s: [
+            "Tuxum, sut va unni silliq xamir qilib aralashtiring.",
+            "Yog‘langan tovaga yupqa quying.",
+            "Ikki tomonini qovuring.",
+          ],
+        },
+        {
+          n: "Sutli guruch bo‘tqasi",
+          t: "40 daqiqa",
+          i: ["Guruch", "Sut", "Sariyog‘"],
+          s: [
+            "Guruchni suvda yarim pishiring.",
+            "Sut qo‘shib, quyuqlashguncha qaynating.",
+            "Sariyog‘ solib damlang.",
+          ],
+        },
+      ];
+      var sel = {};
+      var gEl = document.getElementById("groups");
+      Object.keys(GROUPS).forEach(function (g) {
+        var d = document.createElement("div");
+        d.className = "group";
+        d.innerHTML = "<p>" + g + '</p><div class="chips"></div>';
+        GROUPS[g].forEach(function (x) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "chip";
+          b.textContent = x;
+          b.setAttribute("aria-pressed", "false");
+          b.onclick = function () {
+            sel[x] = !sel[x];
+            b.setAttribute("aria-pressed", sel[x] ? "true" : "false");
+            render();
+          };
+          d.lastChild.appendChild(b);
+        });
+        gEl.appendChild(d);
+      });
+      document.getElementById("clear").onclick = function () {
+        sel = {};
+        document.querySelectorAll(".chip").forEach(function (c) {
+          c.setAttribute("aria-pressed", "false");
+        });
+        render();
+      };
+      function card(r, miss) {
+        var have = r.i.filter(function (x) {
+          return sel[x];
+        });
+        var tag =
+          miss.length === 0
+            ? '<span class="tag ok">Hammasi bor</span>'
+            : '<span class="tag">' + miss.length + " ta yetishmaydi</span>";
+        var h =
+          '<details class="card"><summary><span><b>' +
+          r.n +
+          '</b><br><span class="time">' +
+          r.t +
+          "</span></span>" +
+          tag +
+          '</summary><div class="body">';
+        if (have.length)
+          h += '<p class="have">Sizda bor: ' + have.join(", ") + "</p>";
+        if (miss.length)
+          h += '<p class="miss">Yetishmaydi: ' + miss.join(", ") + "</p>";
+        h +=
+          "<p>Tayyorlash</p><ol>" +
+          r.s
+            .map(function (s) {
+              return "<li>" + s + "</li>";
+            })
+            .join("") +
+          "</ol></div></details>";
+        return h;
+      }
+      function render() {
+        var n = Object.keys(sel).filter(function (k) {
+          return sel[k];
+        }).length;
+        document.getElementById("count").textContent = n
+          ? n + " ta mahsulot tanlandi"
+          : "Hech narsa tanlanmagan";
+        var out = document.getElementById("res");
+        if (!n) {
+          out.innerHTML =
+            '<div class="empty">Yuqoridan kamida bitta mahsulotni belgilang, mos taomlar shu yerda chiqadi.</div>';
+          return;
+        }
+        var ready = [],
+          near = [];
+        R.forEach(function (r) {
+          var miss = r.i.filter(function (x) {
+            return !sel[x];
+          });
+          var got = r.i.length - miss.length;
+          if (!got) return;
+          if (miss.length === 0) ready.push({ r: r, m: miss });
+          else if (miss.length <= 2) near.push({ r: r, m: miss });
+        });
+        near.sort(function (a, b) {
+          return a.m.length - b.m.length;
+        });
+        var h = "";
+        if (ready.length)
+          h +=
+            "<h2>Hozir tayyorlash mumkin (" +
+            ready.length +
+            ")</h2>" +
+            ready
+              .map(function (x) {
+                return card(x.r, x.m);
+              })
+              .join("");
+        if (near.length)
+          h +=
+            "<h2>Yana 1–2 ta mahsulot kerak (" +
+            near.length +
+            ")</h2>" +
+            near
+              .map(function (x) {
+                return card(x.r, x.m);
+              })
+              .join("");
+        if (!h)
+          h =
+            '<div class="empty">Bu mahsulotlardan taom topilmadi. Yana bir-ikkita mahsulot qo‘shib ko‘ring.</div>';
+        out.innerHTML = h;
+      }
+      render();
+    </script>
+  </body>
+</html>
